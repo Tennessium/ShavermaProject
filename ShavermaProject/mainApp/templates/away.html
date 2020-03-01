@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Ждём</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <link href="static/img/logo.png" rel="icon">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Poppins:300,400,500,700"
+          rel="stylesheet">
+    <link href="static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="static/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
+</head>
+<body style="background: #f7f7f7;">
+<section id="contact">
+    <div class="container wow fadeInUp">
+        <div class="section-header">
+            <h3 class="section-title" id="main-message">Это страница оплаты</h3>
+            <p class="section-description" id="sub-message">Мы узнали что вы можете платить криптой (у вас Dapp-браузер)
+                и хотим забрать у
+                вас денег</p>
+        </div>
+    </div>
+</section>
+<script src="static/lib/jquery/jquery.min.js"></script>
+<script src="static/lib/jquery/jquery-migrate.min.js"></script>
+<script src="static/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="static/lib/easing/easing.min.js"></script>
+<script src="static/lib/wow/wow.min.js"></script>
+<script src="static/lib/waypoints/waypoints.min.js"></script>
+<script src="static/lib/counterup/counterup.min.js"></script>
+<script src="static/lib/superfish/hoverIntent.js"></script>
+<script src="static/lib/superfish/superfish.min.js"></script>
+<script src="static/js/main.js"></script>
+<script>
+    let mm = document.getElementById('main-message');
+    let sm = document.getElementById('sub-message');
+    const geo = "{{ geo }}";
+    const id = parseInt("{{ shava_id }}");
+    const yourAddress = '0x7105fbBB3CfA438EDc4D4F92394D09F6E4E55Ae6';
+    const value = parseFloat("{{ eth }}").toString(16);
+    const desiredNetwork = '3';
+
+    if (typeof window.ethereum === 'undefined') {
+        // alert('Looks like you need a Dapp browser to get started.');
+        // alert('Consider installing MetaMask!');
+        window.location.href = '/pay?type=straight&geo=' + geo;
+    } else {
+        ethereum.enable()
+            .catch(function (reason) {
+                if (reason === 'User rejected provider access') {
+                    mm.innerText = 'Что-то пошло не так';
+                    sm.innerText = 'Давайте по новой';
+                    //alert('User rejected provider access')
+                } else {
+                    mm.innerText = 'Что-то пошло не так';
+                    sm.innerText = 'Давайте по новой';
+                    //alert('There was an issue signing you in.')
+                }
+            })
+
+            .then(function (accounts) {
+                if (ethereum.networkVersion !== desiredNetwork) {
+                    mm.innerText = 'Что-то пошло не так';
+                    sm.innerText = 'Пожалуйста, переключитесь на тестовую сеть Ropsten';
+                    //alert('This application requires the Ropsten network, please switch it in your MetaMask UI.')
+                } else {
+                    const account = accounts[0];
+                    sendEtherFrom(account, function (err, transaction) {
+                        if (err) {
+                            mm.innerText = 'Что-то пошло не так';
+                            sm.innerText = 'Давайте по новой';
+                            return //alert(`There's a problem with your transaction`)
+                        }
+
+                        mm.innerText = 'Вот и всё';
+                        sm.innerHTML = 'Оплата произведена. Создается заказ. <hr/> Пожалуйста, не покидайте страницу пока не получите адрес своего заказа.';
+
+                        console.log(transaction);
+                        let data = {
+                            'from': transaction.from,
+                            'geo': geo,
+                            'hash': transaction.hash,
+                            'shava_id': id
+                        };
+                        let req = new XMLHttpRequest();
+                        let url = Object.keys(data).map(function (k) {
+                            return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+                        }).join('&');
+                        req.open('GET', '/metamask_complited?' + url, true);
+                        req.timeout = 10000000;
+                        req.onreadystatechange = function () {
+                            let address = JSON.parse(req.responseText)['address'];
+                            console.log(address);
+                            sm.innerHTML = 'Заказ принят. Ждите дрон<br/>Ваш заказ: ' + address +
+                                '<br/>Посмотреть статус заказа можно <a href=/check?adrs=' + address + '>тут</a>' +
+                                '<br/>Посмотреть ваш контракт-заказ в сети Ethereum можно <a href="https://ropsten.etherscan.io/address/' + address + '">тут</a>';
+
+                            window.onbeforeunload = null;
+                        };
+                        req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                        req.send(null);
+                        //alert('Transaction is successfully done! Thank you.')
+                    })
+                }
+
+            })
+    }
+
+    function sendEtherFrom(account, callback) {
+
+        const method = 'eth_sendTransaction';
+
+        const parameters = [{
+            from: account,
+            to: yourAddress,
+            value: value,
+            gasPrice: '0x2540be400',
+        }];
+
+        const from = account;
+
+        const payload = {
+            method: method,
+            params: parameters,
+            from: from,
+        };
+
+        ethereum.sendAsync(payload, function (err, response) {
+            const rejected = 'User denied transaction signature.';
+            if (response.error && response.error.message.includes(rejected)) {
+                mm.innerText = 'Что-то пошло не так';
+                sm.innerText = 'Кажись вы отменили транзакцию. Давайте по новой';
+                return
+                //return alert(`We can't take your money without your permission.`)
+            }
+
+            if (err) {
+                mm.innerText = 'Что-то пошло не так';
+                sm.innerText = 'Давайте по новой';
+                return
+                //return alert('There was an issue, please try again.')
+            }
+
+            if (response.result) {
+                const txHash = response.result;
+                mm.innerText = 'Есть контакт';
+                sm.innerText = 'Транзакция появилась. Ожидайте.';
+                window.onbeforeunload = function () {
+                    return "Пожалуйста, не покидайте страницу пока не получите адрес вашего заказа.";
+                };
+                //alert('Transaction generated but not yet mined! Please wait.');
+
+                pollForCompletion(txHash, callback)
+            }
+        })
+    }
+
+    function pollForCompletion(txHash, callback) {
+        let calledBack = false;
+
+        const checkInterval = setInterval(function () {
+
+            const notYet = 'response has no error or result';
+            ethereum.sendAsync({
+                method: 'eth_getTransactionByHash',
+                params: [txHash],
+            }, function (err, response) {
+                if (calledBack) return;
+                if (err || response.error) {
+                    if (err.message.includes(notYet)) {
+                        return 'transaction is not yet mined'
+                    }
+
+                    callback(err || response.error)
+                }
+
+                const transaction = response.result;
+                clearInterval(checkInterval);
+                calledBack = true;
+                callback(null, transaction);
+            })
+        }, 2000)
+    }
+
+</script>
+</body>
+</html>

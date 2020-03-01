@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Where we droppin, boys?!</title>
+    <link href="static/img/logo.png" rel="icon">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=48e949aa-259a-4eb5-8812-d480f4708006"
+            type="text/javascript"></script>
+    <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            font-family: Roboto, sans-serif;
+        }
+
+        body img {
+            position: absolute;
+            left: calc(50% - 50px);
+            top: calc(50% - 100px);
+            height: 100px;
+            z-index: 199;
+        }
+
+        .butt___he {
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: 199;
+            background: #f4f4f4;
+            padding: 20px;
+            font-size: 30px;
+            border-radius: 0 0 0 15px;
+            cursor: pointer;
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-drag: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+</head>
+<body>
+<img src="static/img/geo.svg" alt=""/>
+<div class="butt___he" id="butt">Продолжить</div>
+<div id="map"></div>
+<script lang="js">
+    function redirectPost(data, url = '/confirm') {
+        window.location.href = '/confirm?' + new URLSearchParams(data).toString();
+    }
+
+    const shad_coords = [55.73344116437061, 37.58971106535496];
+    const id = location.search.split('shava_id=')[1];
+    var getCenter = function () {
+        return []
+    };
+
+    function distance(p1, p2) {
+        let lat1 = p1[0];
+        let lat2 = p2[0];
+        let lon1 = p1[1];
+        let lon2 = p2[1];
+
+        if (lat1 === lat2 && lon1 === lon2) {
+            return 0;
+        } else {
+            var radlat1 = Math.PI * lat1 / 180;
+            var radlat2 = Math.PI * lat2 / 180;
+            var theta = lon1 - lon2;
+            var radtheta = Math.PI * theta / 180;
+            var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+            if (dist > 1) {
+                dist = 1;
+            }
+            dist = Math.acos(dist);
+            dist = dist * 180 / Math.PI;
+            dist = dist * 60 * 1.1515;
+
+            dist = dist * 1.609344;
+            return dist;
+        }
+    }
+
+    function getDistance() {
+        return distance(shad_coords, getCenter());
+    }
+
+    ymaps.ready(function () {
+        var myMap = new ymaps.Map('map', {
+            center: shad_coords,
+            zoom: 15,
+            controls: []
+        }, {
+            searchControlProvider: 'yandex#search'
+        });
+        var myCircle = new ymaps.Circle([shad_coords, 500], {
+            hintContent: "Только тут доставлять и можно"
+        }, {
+            fillColor: "rgba(99,97,219,0.15)",
+            strokeColor: "#534599",
+            strokeOpacity: 0.8,
+            strokeWidth: 1
+        });
+
+        myMap.geoObjects.add(myCircle);
+        getCenter = function () {
+            return myMap.getCenter();
+        };
+        document.getElementById('butt').onclick = function () {
+            if (getDistance() <= 0.5) {
+                //window.window.location = '/confirm?geo=' +  + '&shava_id=' + id;
+                redirectPost({'geo': getCenter().toString(), 'shava_id': {{ shava_id }}});
+            } else {
+                alert('Выбери точку поближе, парень');
+            }
+        };
+    });
+</script>
+</body>
+</html>

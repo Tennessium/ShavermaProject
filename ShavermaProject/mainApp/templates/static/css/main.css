@@ -1,0 +1,72 @@
+body {
+    background: #ffffff;
+    color: black;
+}
+
+.container {
+    padding: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    display: flex;
+    flex-direction: row;
+}
+
+.holder {
+    margin: 10px;
+    border-radius: 20px;
+    background: white;
+    border: solid black;
+    width: calc(50% - 20px);
+    height: calc(100% - 20px);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px 0 20px;
+}
+
+
+.zakaz {
+    padding: 20px;
+    border-radius: 15px;
+    background: #ffffff;
+    border: solid black;
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.num {
+    font-size: 40px;
+    margin-right: 13px;
+}
+
+.both {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+}
+
+.copter {
+    padding: 20px;
+    border-radius: 15px;
+    background: #ffffff;
+    border: solid black;
+    display: flex;
+    cursor: pointer;
+    margin-bottom: 20px;
+    flex-direction: column;
+}
+
+.send {
+    border: solid black;
+    border-radius: 10px;
+    width: fit-content;
+    padding: 10px;
+    margin-top: 10px;
+    transition: .3s;
+}
+
+.send:hover {
+    background: #e8e8e8;
+}

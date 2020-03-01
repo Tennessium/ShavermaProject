@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Узнать статус заказа</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <link href="static/img/logo.png" rel="icon">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Poppins:300,400,500,700"
+          rel="stylesheet">
+    <link href="static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="static/lib/animate/animate.min.css" rel="stylesheet">
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=48e949aa-259a-4eb5-8812-d480f4708006"
+            type="text/javascript"></script>
+    <link href="static/css/style.css" rel="stylesheet">
+    <style>
+        #map {
+            width: 100%;
+            height: 50%;
+        }
+
+        #header {
+            background: rgba(52, 59, 64, 0.9);
+            padding: 20px 0;
+            height: 72px;
+            transition: all 0.5s;
+        }
+    </style>
+</head>
+<body style="background: #f7f7f7;">
+<header id="header">
+    <div class="container">
+        <div id="logo" class="pull-left">
+            <h1><a href="/">FCP</a></h1>
+        </div>
+    </div>
+</header>
+<main style="margin-top: 40px" id="main">
+    <section id="contact">
+        <div class="container wow fadeInUp">
+            <div class="section-header">
+                <h3 class="section-title">Статус заказа</h3>
+                <p class="section-description">Тут вы можете узнать статус вашего заказа</div>
+        </div>
+
+        <div class="container wow fadeInUp mt-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-8">
+                    {% if post %}
+                        {% if error %}
+                            <p class="section-description">Информация обрабатывается. Пожалуйста, подождите</p>
+                        {% else %}
+                            <p class="section-description">Наименование шаурмы: {{ shava_id }}</p>
+                            <p class="section-description">Дальность доставки: {{ delivery_distance }}</p>
+                            <p class="section-description">Время заказа: {{ order_time }}</p>
+                            <p class="section-description">Статус заказа: {{ delivery_time }}</p>
+                            <p class="section-description">Ожидаемое время доставки: {{ estimated_time }}</p>
+                            <p class="section-description">Хэш: {{ tx_hash }}</p>
+                            <p class="section-description">Адрес клиента: {{ client }}</p>
+                            <p class="section-description">Координаты сброса: {{ geo }}</p>
+                            <div id="map"></div>
+                            <script lang="js">
+                                const drop_coords = [{{ geo }}];
+                                const shad_coords = [55.73344116437061, 37.58971106535496];
+                                const id = location.search.split('shava_id=')[1];
+                                ymaps.ready(function () {
+                                    var myMap = new ymaps.Map('map', {
+                                        center: drop_coords,
+                                        zoom: 16,
+                                        controls: []
+                                    }, {
+                                        searchControlProvider: 'yandex#search'
+                                    });
+                                    var myCircle = new ymaps.Circle([shad_coords, 500], {
+                                        hintContent: "Только тут доставлять и можно"
+                                    }, {
+                                        fillColor: "rgba(99,97,219,0.15)",
+                                        strokeColor: "#534599",
+                                        strokeOpacity: 0.8,
+                                        strokeWidth: 1
+                                    });
+
+                                    myMap.geoObjects.add(myCircle);
+                                    myMap.geoObjects.add(new ymaps.Placemark(drop_coords, {
+                                        balloonContent: 'Вот сюда прилетит вкусная шаурма',
+                                    }, {
+                                        preset: 'islands#blueCircleDotIconWithCaption',
+                                        iconCaptionMaxWidth: '50'
+                                    }));
+                                });
+                            </script>
+                        {% endif %}
+                    {% endif %}
+                    {% if not post %}
+                        {% if error %}
+                            <p class="section-description">Мы не нашли такого адреса. Убедитесь в правильности введённых
+                                данных</p>
+                        {% endif %}
+                        <div class="form">
+                            <form action="" method="post" role="form" class="contactForm">
+                                <div class="form-group">
+                                    <input required type="text" name="adrs" class="form-control" id="adrs"
+                                           placeholder="Ваш адрес заказа"/> <!--pattern="^(0x[ABCDEFabcdef\d]{40})$"-->
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="text-center">
+                                    <button id="sub_button" type="submit">Узнать</button>
+                                </div>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+<script src="static/lib/jquery/jquery.min.js"></script>
+<script src="static/lib/jquery/jquery-migrate.min.js"></script>
+<script src="static/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="static/lib/easing/easing.min.js"></script>
+<script src="static/lib/wow/wow.min.js"></script>
+<script src="static/lib/waypoints/waypoints.min.js"></script>
+<script src="static/lib/counterup/counterup.min.js"></script>
+<script src="static/lib/superfish/hoverIntent.js"></script>
+<script src="static/lib/superfish/superfish.min.js"></script>
+<script src="static/js/main.js"></script>
+</body>
+</html>

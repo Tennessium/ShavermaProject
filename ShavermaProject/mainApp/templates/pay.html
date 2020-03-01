@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Тут всё платно</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <link href="static/img/logo.png" rel="icon">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Poppins:300,400,500,700"
+          rel="stylesheet">
+    <link href="static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="static/lib/animate/animate.min.css" rel="stylesheet">
+
+    <link href="static/css/style.css" rel="stylesheet">
+</head>
+<body style="background: #f7f7f7;">
+<main id="main">
+    {% if not completed %}
+        <section id="contact">
+            <div class="container wow fadeInUp">
+                <div class="section-header">
+                    <h3 class="section-title">Время оплаты</h3>
+                    <p class="section-description">Для проведения оплаты предоставьте нам свой адрес кошелька в сети
+                        Ropsten<br/>После подтверждения транзакции мы вышлем вам шаурму</p>
+                </div>
+            </div>
+
+
+            <div class="container wow fadeInUp mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-3 col-md-4">
+                        <div class="info">
+                            <div>
+                                <i class="fa fa-map-marker"></i>
+                                <p>Координаты<br>{{ pgeo }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5 col-md-8">
+                        <div class="form">
+                            <div id="sendmessage">Your message has been sent. Thank you!</div>
+                            <div id="errormessage"></div>
+                            <form action="" method="post" role="form" class="contactForm">
+                                <div class="form-group">
+                                    <input required type="text" name="name" class="form-control" id="name"
+                                           placeholder="Ваш адрес кошелька" pattern="^(0x[ABCDEFabcdef\d]{40})$"/>
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group">
+                                    <input required type="text" name="key" class="form-control" id="key"
+                                           placeholder="Ваш закрытый ключ"/>
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group" style="display: none">
+                                    <input required type="text" name="geo" class="form-control" id="geo"
+                                           value="{{ geo }}"/>
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group" style="display: none">
+                                    <input required type="text" name="shava_id" class="form-control" id="shava_id"
+                                           value="{{ shava_id }}"/>
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group">
+                            <textarea class="form-control" name="message" rows="5" data-rule="required"
+                                      data-msg="Please write something for us"
+                                      placeholder="Может вы что-то хотите нам сказать"></textarea>
+                                    <div class="validation"></div>
+                                </div>
+                                {% if error %}
+                                    <div>Возникла ошибка. Пожалуйста, убедитесь в правильности введённых данных</div>
+                                    <hr/>
+                                {% endif %}
+                                <div class="text-center">
+                                    <button id="sub_button" type="submit">Оплатить</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script>
+            document.getElementById('sub_button').onclick = function () {
+                document.getElementById('sub_button').innerText = 'loading...';
+            };
+        </script>
+    {% endif %}
+    {% if completed %}
+        <section id="contact">
+            <div class="container wow fadeInUp">
+                <div class="section-header">
+                    <h3 class="section-title" id="main-message">Вот и всё</h3>
+                    <p class="section-description" id="sub-message">Ждите дрон</p>
+                    <p class="section-description" id="sub-message">Посмотреть транзакцию: <a
+                            href="https://ropsten.etherscan.io/tx/{{ hash }}">{{ hash }}</a><br/>Посмотреть ваш
+                        контракт-заказ: <a
+                                href="https://ropsten.etherscan.io/address/{{ order }}">{{ order }}</a><br/>Посмотреть
+                        статус заказа можно <a href="/check?adrs={{ order }}">тут</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    {% endif %}
+</main>
+
+<a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+<script src="static/lib/jquery/jquery.min.js"></script>
+<script src="static/lib/jquery/jquery-migrate.min.js"></script>
+<script src="static/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="static/lib/easing/easing.min.js"></script>
+<script src="static/lib/wow/wow.min.js"></script>
+<script src="static/lib/waypoints/waypoints.min.js"></script>
+<script src="static/lib/counterup/counterup.min.js"></script>
+<script src="static/lib/superfish/hoverIntent.js"></script>
+<script src="static/lib/superfish/superfish.min.js"></script>
+<script src="static/js/main.js"></script>
+</body>
+</html>

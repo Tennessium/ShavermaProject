@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>FCP</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <link href="static/img/logo.png" rel="icon">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Poppins:300,400,500,700"
+          rel="stylesheet">
+    <link href="static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="static/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
+    <script lang="js" src="static/lib/chart.min.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=48e949aa-259a-4eb5-8812-d480f4708006"
+            type="text/javascript"></script>
+</head>
+
+<body>
+<header id="header">
+    <div class="container">
+        <div id="logo" class="pull-left">
+            <h1><a href="/">FCP</a></h1>
+        </div>
+    </div>
+</header>
+
+<section id="hero">
+    <div class="hero-container">
+        <h1>Falafel. Copter. Parachute.</h1>
+        <h2>Или как сделать мир лучше с помощью блокчейна, шаурмы и коптеров</h2>
+        <a href="/about" class="btn-get-started">Действительно, как же?</a>
+    </div>
+</section>
+
+<main id="main">
+    <section id="about">
+        <div class="container">
+            <div class="row about-container">
+
+                <div class="col-lg-6 content order-lg-1 order-2">
+                    <h2 class="title">Что мы такое?</h2>
+                    <p>
+                        FCP - революционный сервис, объединющий в себе такие невероятные технологии как
+                        <strong>блокчейн</strong>
+                        и <strong>летательная робототехника</strong>
+                    </p>
+
+                    <div class="icon-box wow fadeInUp">
+                        <div class="icon"><i class="fa fa-bitcoin"></i></div>
+                        <h4 class="title"><a href="">Блокчейн</a></h4>
+                        <p class="description">Прозрачная финансовая отчетность</p>
+                    </div>
+
+                    <div class="icon-box wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="icon"><i class="fa fa-crosshairs"></i></div>
+                        <h4 class="title"><a href="">Коптеры</a></h4>
+                        <p class="description">Доставим прямо парашютом</p>
+                    </div>
+
+                    <div class="icon-box wow fadeInUp" data-wow-delay="0.4s">
+                        <div class="icon"><i class="fa fa-paw"></i></div>
+                        <h4 class="title"><a href="">Шаурма</a></h4>
+                        <p class="description">Самая вкусная во всём воздушном пространстве</p>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6 background order-lg-2 order-1 wow fadeInRight"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="call-to-action">
+        <div class="container wow fadeIn">
+            <div class="row">
+                <div class="col-lg-9 text-center text-lg-left">
+                    <h3 class="cta-title">Грех такое не протестировать</h3>
+                    <p class="cta-text">Уже сейчас мы готовы отправить вам коптер с едой в любую точку в радиусе 500м от
+                        шаурменной. Вся ответственность за место падения шаурмы лежит на вас. <a
+                                href="https://vk.me/kal3vala">Подробнее...</a></p>
+                </div>
+                <div class="col-lg-3 cta-btn-container text-center">
+                    <a class="cta-btn align-middle" href="/order">Сделать заказ</a>
+                </div>
+            </div>
+
+        </div>
+        <div class="container wow fadeIn">
+            <div class="row">
+                <div class="col-lg-9 text-center text-lg-left">
+                    <h3 class="cta-title">Уже сделали заказ?</h3>
+                    <p class="cta-text">Посмотрите его статус прямо сейчас</p>
+                </div>
+                <div class="col-lg-3 cta-btn-container text-center">
+                    <a class="cta-btn align-middle" href="/check">Проверить заказ</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="facts">
+        <div class="container wow fadeIn">
+            <div class="section-header">
+                <h3 class="section-title">Статистика</h3>
+                <p class="section-description">Вот такие мы молодцы. Столько всего сделали. Да ещё и статистика
+                    честная</p>
+            </div>
+            <div class="row counters">
+                <div class="col-lg-3 col-6 text-center">
+                    <span data-toggle="counter-up">{{ count }}</span>
+                    <p>Обработано заказов</p>
+                </div>
+                <div class="col-lg-3 col-6 text-center">
+                    <span data-toggle="counter-up">{{ delivered }}</span>
+                    <p>Доставлено шаурмы</p>
+                </div>
+                <div class="col-lg-3 col-6 text-center">
+                    <span data-toggle="counter-up">{{ mean_dist }}</span>
+                    <p>Средняя дальность доставки (в метрах)</p>
+                </div>
+                <div onclick="document.getElementById('map-wrapper').hidden = false;" style="cursor: pointer;"
+                     class="col-lg-3 col-6 text-center">
+                    <span style="height: 72px; display: flex; align-content: center; justify-content: center"
+                          class="fa fa-map-marker"></span>
+                    <p>Точки доставки</p>
+                </div>
+            </div>
+            <div hidden id="map-wrapper">
+                <hr/>
+                <div style="width: 100%; height: 400px;" id="map">
+                </div>
+            </div>
+            <script>
+                ymaps.ready(init);
+                const shad_coords = [55.73344116437061, 37.58971106535496];
+
+                function init() {
+                    var myMap = new ymaps.Map('map', {
+                        center: shad_coords,
+                        zoom: 15,
+                        controls: []
+                    }, {
+                        searchControlProvider: 'yandex#search'
+                    }), clusterer = new ymaps.Clusterer({
+                        preset: 'islands#blueCircleDotIconWithCaption',
+                        groupByCoordinates: false,
+
+                        clusterDisableClickZoom: true,
+                        clusterHideIconOnBalloonOpen: false,
+                        geoObjectHideIconOnBalloonOpen: false
+                    });
+
+                    //myMap.geoObjects.add(objectManager);
+                    var myCircle = new ymaps.Circle([shad_coords, 500], {
+                        hintContent: "Только тут доставлять и можно"
+                    }, {
+                        fillColor: "rgba(99,97,219,0.15)",
+                        strokeColor: "#534599",
+                        strokeOpacity: 0.8,
+                        strokeWidth: 1
+                    });
+
+                    myMap.geoObjects.add(myCircle);
+                    const geos = {{ geos|safe }};
+
+
+                    var geoObjects = [];
+
+                    for (var i = 0; i < geos.length; i++) {
+                        geoObjects[i] = new ymaps.Placemark(geos[i], 'Вот сюды кидали шаву', {preset: 'islands#blueCircleDotIconWithCaption'});
+                    }
+
+                    clusterer.options.set({
+                        gridSize: 80,
+                        clusterDisableClickZoom: true
+                    });
+                    clusterer.add(geoObjects);
+                    myMap.geoObjects.add(clusterer);
+
+                }
+            </script>
+            <hr/>
+            <div class="row">
+                <canvas id="canvas"></canvas>
+            </div>
+            <script>
+                var randomScalingFactor = function () {
+                    return Math.round(Math.random() * 100);
+                };
+
+                var color = Chart.helpers.color;
+                var config = {
+                    type: 'radar',
+                    data: {
+                        labels: ['Классическая культура', 'Сырная культура',
+                            'Блэк пеппер', 'Паприка барбекю',
+                            'Аля русская', 'Из мраморной говядины',
+                            'В турецкой лепешке',
+                            'Из свиного окорока'
+                        ],
+                        datasets: [{
+                            label: 'Наша шаурма',
+                            backgroundColor: color(window.chartColors.blue).alpha(0.2).rgbString(),
+                            borderColor: window.chartColors.blue,
+                            pointBackgroundColor: window.chartColors.blue,
+                            data: {{ food }}
+                        }]
+                    },
+                    options: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Что больше любят наши клиенты'
+                        },
+                        scale: {
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+
+                window.onload = function () {
+                    window.myRadar = new Chart(document.getElementById('canvas'), config);
+                };
+
+                var colorNames = Object.keys(window.chartColors);
+            </script>
+        </div>
+    </section>
+
+    <section id="team">
+        <div class="container wow fadeInUp">
+            <div class="section-header">
+                <h3 class="section-title">Наша команда</h3>
+                <p class="section-description">Ученики групп S202 и S204</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-6">
+                    <div class="member">
+                        <div class="pic"><img src="static/img/team-3.jpg" alt=""></div>
+                        <h4>Фёдор Чихачёв</h4>
+                        <span>Блокчейн мастер</span>
+                        <div class="social">
+                            <a href="https://vk.com/kal3vala"><i class="fa fa-vk"></i></a>
+                            <a href="https://github.com/FChikh"><i class="fa fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="member">
+                        <div class="pic"><img src="static/img/team-1.jpg" alt=""></div>
+                        <h4>Игорь Нуруллаев</h4>
+                        <span>Дрон мастер</span>
+                        <div class="social">
+                            <a href="https://vk.com/onceiwasadog"><i class="fa fa-vk"></i></a>
+                            <a href="https://github.com/Tennessium"><i class="fa fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container wow fadeInUp">
+            <div class="section-header">
+                <h3 class="section-title">Вы шаурмен?</h3>
+                <p class="section-description">Так докажите</div>
+        </div>
+
+        <div class="container wow fadeInUp mt-5" style="margin-bottom: 50px;">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-8">
+                    <div class="form">
+                        <form action="/shaurman" method="post" role="form" class="contactForm">
+                            <div class="form-group">
+                                <input type="password" required type="text" name="very_secret_key" class="form-control"
+                                       id="very_secret_key"
+                                       placeholder="Ваш секретный ключ"/>
+                                <div class="validation"></div>
+                            </div>
+                            <div class="text-center">
+                                <button id="sub_button" type="submit">Войти</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer id="footer">
+    <div class="container">
+        <div class="copyright">
+            Москва 2020 <strong>ШАД</strong>
+        </div>
+        <div class="credits">
+            Designed by <a href="https://vk.com/onceiwasadog">Tenessinum</a>
+        </div>
+    </div>
+</footer>
+
+<a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+<script src="static/lib/jquery/jquery.min.js"></script>
+<script src="static/lib/jquery/jquery-migrate.min.js"></script>
+<script src="static/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="static/lib/easing/easing.min.js"></script>
+<script src="static/lib/wow/wow.min.js"></script>
+<script src="static/lib/waypoints/waypoints.min.js"></script>
+<script src="static/lib/counterup/counterup.min.js"></script>
+<script src="static/lib/superfish/hoverIntent.js"></script>
+<script src="static/lib/superfish/superfish.min.js"></script>
+<script src="static/js/main.js"></script>
+</body>
+</html>
